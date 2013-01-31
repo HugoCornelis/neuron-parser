@@ -1,0 +1,37 @@
+#!/usr/bin/perl -w
+#!/usr/bin/perl -w -d:ptkdb
+#!
+
+
+use strict;
+
+
+use YAML;
+
+my $build_database_yaml = `neurospaces_build --help-all`;
+
+my $build_database = Load($build_database_yaml);
+
+my $all_packages = $build_database->{all_packages};
+
+my $directory = $all_packages->{'neuron-parser'}->{directory};
+
+system "cd \"$directory\" && neuron-parser-check";
+
+if ($?)
+{
+    die "$0: *** Error: neuron-parser-check concludes there is something wrong with your documentation workspace.";
+}
+
+system "neurospaces_sync --enable neuron-parser neuron-parser --verbose";
+
+if ($?)
+{
+    die "$0: *** Error: $?";
+}
+else
+{
+    system "neurospaces_update --enable neuron-parser neuron-parser --verbose";
+}
+
+
