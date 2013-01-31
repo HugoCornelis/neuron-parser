@@ -209,7 +209,7 @@ static void nrn_alloc(_prop)
  _mechtype = nrn_get_mechtype(_mechanism[1]);
   hoc_register_dparam_size(_mechtype, 2);
  	hoc_register_var(hoc_scdoub, hoc_vdoub, hoc_intfunc);
- 	ivoc_help("help ?1 VClamp /home/hines/neuron/nrnrelrpm/src/nrnoc//home/hines/neuron/nrnrel72/src/nrnoc/vclmp.mod\n");
+ 	ivoc_help("help ?1 VClamp /home/hugo/neurospaces_project/neuron-parser/source/snapshots/0/nrn-7.2/src/nrnoc/./vclmp.mod\n");
  hoc_register_limits(_mechtype, _hoc_parm_limits);
  hoc_register_units(_mechtype, _hoc_parm_units);
  }
@@ -260,7 +260,7 @@ double icur (  )  {
    else {
      error =  0; clamp();
  error = simeq(3, _coef1, _p, _slist1);
- if(error){fprintf(stderr,"at line 141 in file /home/hines/neuron/nrnrel72/src/nrnoc/vclmp.mod:\n		SOLVE clamp\n"); nrn_complain(_p); abort_run(error);}
+ if(error){fprintf(stderr,"at line 141 in file ./vclmp.mod:\n		SOLVE clamp\n"); nrn_complain(_p); abort_run(error);}
  _licur = ( vo - v ) / rstim ;
      }
    
@@ -500,7 +500,7 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
  { {
  for (; t < _break; t += dt) {
  error =  update();
- if(error){fprintf(stderr,"at line 111 in file /home/hines/neuron/nrnrel72/src/nrnoc/vclmp.mod:\n	SOLVE update METHOD after_cvode : but not really (see above)\n"); nrn_complain(_p); abort_run(error);}
+ if(error){fprintf(stderr,"at line 111 in file ./vclmp.mod:\n	SOLVE update METHOD after_cvode : but not really (see above)\n"); nrn_complain(_p); abort_run(error);}
  
 }}
  t = _save;
