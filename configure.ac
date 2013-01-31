@@ -19,7 +19,7 @@ dnl ##########################################################################
 AC_PREREQ(2.59)
 
 # $Format: "AC_INIT(${package}, ${major}.${minor}.${micro}-${label}, ${email})"$
-AC_INIT(${package}, 0.0.0-alpha, bampasakis@gmail.com)
+AC_INIT(neuron-parser, 0.0.0-alpha, bampasakis@gmail.com)
 
 
 
@@ -55,7 +55,7 @@ dnl dnl all subdirs
 dnl AC_CONFIG_SUBDIRS()
 
 # $Format: "AM_INIT_AUTOMAKE(${package}, ${major}.${minor}.${micro}-${label})"$
-AM_INIT_AUTOMAKE(${package}, 0.0.0-alpha)
+AM_INIT_AUTOMAKE(neuron-parser, 0.0.0-alpha)
 
 PERL_MODULES=`(cd perl && find . -name "*.pm" | perl -pe 's/\n/ /g')`
 AC_SUBST(PERL_MODULES)
