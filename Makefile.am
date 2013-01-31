@@ -76,7 +76,7 @@ uninstall-local:
 
 test: check
 
-#TESTS = $(srcdir)/tests/neurospaces_harness
+TESTS = /usr/local/bin/neurospaces_harness
 
 html-upload-prepare:
 	( cd tests && ./tests_2_html --introduction introduction.html )

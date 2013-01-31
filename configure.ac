@@ -19,7 +19,7 @@ dnl ##########################################################################
 AC_PREREQ(2.59)
 
 # $Format: "AC_INIT(${package}, ${major}.${minor}.${micro}-${label}, ${email})"$
-AC_INIT(${package}, 0.0.0-alpha, hugo.cornelis@gmail.com)
+AC_INIT(${package}, 0.0.0-alpha, bampasakis@gmail.com)
 
 
 

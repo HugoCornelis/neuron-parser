@@ -27,7 +27,8 @@ class PackageInfo:
         
     def GetRevisionInfo(self):
 # $Format: "        return \"${monotone_id}\""$
-        return "86b7c29a1f505c457e8b169831bc532c4a5426b6_MTN not found
+        return "8b244ecd5f1def375a418c3f802b4541f8c5ef42_MTN not found
+"
 "
 
     def GetName(self):
