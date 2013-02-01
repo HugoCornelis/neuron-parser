@@ -11,6 +11,8 @@
 #include "parse.h"
 #include "membdef.h"
 
+#include "neurospaces/components/segment.h"
+
 extern Object* hoc_thisobject;
 extern Object** hoc_objgetarg();
 extern Objectdata* hoc_top_level_data;
@@ -306,6 +308,10 @@ static Section* new_section(ob, sym, i)
 	cable_prop_assign(nseg, &d, 0);
 	tree_changed = 1;
 /*printf("new_section %s\n", secname(sec));*/
+
+	struct symtab_HSolveListElement *phsleChild = (struct symtab_HSolveListElement *)SegmentCalloc();
+
+
 	return sec;
 }
 	
