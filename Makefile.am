@@ -14,7 +14,7 @@
 ##############################################################################
 
 
-SUBDIRS = nrn-7.2 # perl python
+SUBDIRS = nrn-7.2 glue # perl python
 
 # fill in the scripts that should go with the distribution:
 dist_bin_SCRIPTS = \
