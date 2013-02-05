@@ -2,60 +2,60 @@
 #!/usr/bin/perl -w -d:ptkdb
 #
 
-package SLI;
+package Neuron;
 
 
 use strict;
 
 
-use SwiggableSLI;
+use SwiggableNeuron;
 
 
 our $backend_initialized;
 
 
-sub sli_list_objects
+sub neuron_list_objects
 {
     if (!$backend_initialized)
     {
 	run_model(undef, $GENESIS3::model_container);
     }
 
-    my $result = SwiggableSLI::ListObjects();
+    my $result = SwiggableNeuron::ListObjects();
 
     if (!$result)
     {
-	print "$0: sli_list_objects() failed\n";
+	print "$0: neuron_list_objects() failed\n";
     }
 }
 
-sub sli_list_commands
+sub neuron_list_commands
 {
     if (!$backend_initialized)
     {
 	run_model(undef, $GENESIS3::model_container);
     }
 
-    my $result = SwiggableSLI::ListCommands();
+    my $result = SwiggableNeuron::ListCommands();
 
     if (!$result)
     {
-	print "$0: sli_list_commands() failed\n";
+	print "$0: neuron_list_commands() failed\n";
     }
 }
 
-sub sli_print_command_list
+sub neuron_print_command_list
 {
     if (!$backend_initialized)
     {
 	run_model(undef, $GENESIS3::model_container);
     }
 
-    my $result = SwiggableSLI::PrintCommandList();
+    my $result = SwiggableNeuron::PrintCommandList();
 
     if (!$result)
     {
-	print "$0: sli_print_command_list() failed\n";
+	print "$0: neuron_print_command_list() failed\n";
     }
 }
 
@@ -65,7 +65,7 @@ sub include_script
 
     # include the script, result is 1 for success, 0 for failure.
 
-    my $result = SwiggableSLI::IncludeG2Script("$script");
+    my $result = SwiggableNeuron::IncludeHocScript("$script");
 
     if (!$result)
     {
@@ -86,17 +86,17 @@ sub include_model
 
     my $morphology_directory = $1;
 
-    $morphology_directory = $ENV{HOME} . "/neurospaces_project/ns-sli/source/snapshots/0";
+    $morphology_directory = $ENV{HOME} . "/neurospaces_project/ns-neuron/source/snapshots/0";
 
     # read the model, result is always 0 for some obscure reason.
 
     my $result
-	= SwiggableSLI::IncludeG2Model
+	= SwiggableNeuron::IncludeHocModel
 	    (
 	     "$morphology_directory",
 	     "$script",
 	     $model_container->backend(),
-	     $ENV{HOME} . "/neurospaces_project/ns-sli/source/snapshots/0/.simrc-ns-sli",
+	     $ENV{HOME} . "/neurospaces_project/neuron-parser/source/snapshots/0/.simrc-ns-neuron",
 	    );
 
     if (!$result)
@@ -112,7 +112,7 @@ sub include_model
 
 sub interpreter
 {
-    SwiggableSLI::RunInterpreter(1);
+    SwiggableNeuron::RunInterpreter(1);
 }
 
 
@@ -132,19 +132,19 @@ sub run_model
 
 	$morphology_directory = $1;
 
-	$morphology_directory = $ENV{HOME} . "/neurospaces_project/ns-sli/source/snapshots/0";
+	$morphology_directory = $ENV{HOME} . "/neurospaces_project/neuron-parser/source/snapshots/0";
 
     }
 
     # read the model, result is always 0 for some obscure reason.
 
     my $result
-	= SwiggableSLI::RunG2Model
+	= SwiggableNeuron::RunHocModel
 	    (
 	     (defined $morphology_directory ? "$morphology_directory" : undef),
 	     (defined $script ? "$script" : undef),
 	     $model_container->backend(),
-	     $ENV{HOME} . "/neurospaces_project/ns-sli/source/snapshots/0/.simrc-ns-sli",
+	     $ENV{HOME} . "/neurospaces_project/neuron-parser/source/snapshots/0/.simrc-ns-neuron",
 	    );
 
     if (!$result)

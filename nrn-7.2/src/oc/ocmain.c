@@ -74,10 +74,10 @@ main(argc, argv, envp)
 int our_argc = 1;
 char *our_argv[1];
 our_argv[0] = "Neuron";
-	err = hoc_main1(our_argc, our_argv, envp);
+	err = hoc_main1(our_argc, our_argv, envp, NULL);
 #else
 	setnrnhome(argv[0]);
-	err = hoc_main1(argc, argv, envp);
+	err = hoc_main1(argc, argv, envp, NULL);
 #endif
 	if (!err) {
 		hoc_final_exit();

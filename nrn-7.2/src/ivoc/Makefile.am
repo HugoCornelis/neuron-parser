@@ -66,7 +66,10 @@ ivoc_LDADD = ../oc/nocable.o ../oc/modlreg.o \
 	libivoc.la ../nrnmpi/libnrnmpi.la \
 	@MEMACSLIBLA@ ../mesch/libmeschach.la \
 	../gnu/libneuron_gnu.la $(IVOS_DIR) \
-	$(IV_LIBS) @NRN_READLINE_LIBS@ @NRNJAVA_LIBLA@
+	$(IV_LIBS) @NRN_READLINE_LIBS@ @NRNJAVA_LIBLA@ \
+	-L/usr/local/lib/model-container \
+	-lneurospacesread \
+	-lsymbol_algorithms
 
 ## We have to play a trick on automake to get it to install the .o files in
 ## an architecture-dependent subdirectory.  (Apparently automake's authors

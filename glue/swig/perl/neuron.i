@@ -4,7 +4,7 @@
 /* gcc -c heccer_wrap.c `perl -MExtUtils::Embed -e ccopts`  */
 /* gcc -shared heccer_wrap.o -L. -lheccer -o heccer.so */
 
-%module SwiggableSLI
+%module SwiggableNeuron
 
 %{
 #include "nrn-7.2/config.h"
@@ -76,9 +76,9 @@ double double_get(double *a, int i)
 
 struct Neurospaces;
 
-extern int sli_main(int argc, char **argv, char **envp, struct Neurospaces *pneuro);
+extern int hoc_main1(int argc, char **argv, char **envp, struct Neurospaces *pneuro);
 
-int IncludeG2Model(char *pcMorphologyDirectory, char *pcScript, void *pvNeurospaces, char *pcSimrc)
+int IncludeHocModel(char *pcMorphologyDirectory, char *pcScript, void *pvNeurospaces, char *pcSimrc)
 {
     //- the modeling service is neurospaces
 
@@ -88,7 +88,7 @@ int IncludeG2Model(char *pcMorphologyDirectory, char *pcScript, void *pvNeurospa
 
     int argc = 0;
 
-    argv[argc++] = "ns-sli";
+    argv[argc++] = "neuron-parser";
 
     argv[argc++] = "-batch";
 
@@ -98,7 +98,7 @@ int IncludeG2Model(char *pcMorphologyDirectory, char *pcScript, void *pvNeurospa
 
     if (!pcSimrc)
     {
-	pcSimrc = "/local_home/local_home/hugo/neurospaces_project/ns-sli/source/snapshots/0/.simrc-ns-sli";
+	pcSimrc = "/local_home/local_home/hugo/neurospaces_project/neuron-parser/source/snapshots/0/.simrc-ns-neuron";
     }
 
     argv[argc++] = pcSimrc;
@@ -124,13 +124,13 @@ int IncludeG2Model(char *pcMorphologyDirectory, char *pcScript, void *pvNeurospa
     // At first sight, it seems that envp is not used, so I pass a
     // NULL pointer for it.
 
-    int iFail = sli_main(argc, argv, NULL, pneuro);
+    int iFail = hoc_main1(argc, argv, NULL, pneuro);
 
     return(iFail == 0);
 }
 
 
-int IncludeG2Script(char *pcScript)
+int IncludeHocScript(char *pcScript)
 {
     extern int      IncludeScript();
 
@@ -144,7 +144,7 @@ int IncludeG2Script(char *pcScript)
 }
 
 
-int RunG2Model(char *pcMorphologyDirectory, char *pcScript, void *pvNeurospaces, char *pcSimrc)
+int RunHocModel(char *pcMorphologyDirectory, char *pcScript, void *pvNeurospaces, char *pcSimrc)
 {
     //- the modeling service is neurospaces
 
@@ -154,7 +154,7 @@ int RunG2Model(char *pcMorphologyDirectory, char *pcScript, void *pvNeurospaces,
 
     int argc = 0;
 
-    argv[argc++] = "ns-sli";
+    argv[argc++] = "neuron-parser";
 
     argv[argc++] = "-batch";
 
@@ -164,7 +164,7 @@ int RunG2Model(char *pcMorphologyDirectory, char *pcScript, void *pvNeurospaces,
 
     if (!pcSimrc)
     {
-	pcSimrc = "/local_home/local_home/hugo/neurospaces_project/ns-sli/source/snapshots/0/.simrc-ns-sli";
+	pcSimrc = "/local_home/local_home/hugo/neurospaces_project/neuron-parser/source/snapshots/0/.simrc-ns-neuron";
     }
 
     argv[argc++] = pcSimrc;
@@ -190,7 +190,7 @@ int RunG2Model(char *pcMorphologyDirectory, char *pcScript, void *pvNeurospaces,
     // At first sight, it seems that envp is not used, so I pass a
     // NULL pointer for it.
 
-    int iFail = sli_main(argc, argv, NULL, pneuro);
+    int iFail = hoc_main1(argc, argv, NULL, pneuro);
 
     return(iFail == 0);
 }
@@ -204,30 +204,27 @@ int RunInterpreter(int iSomething)
 
 int ListObjects()
 {
-
-  do_list_objects();
-
+    do_list_objects();
 }
+
 
 int ListCommands()
 {
+    char *argv[2];
 
+    argv[0] = "listcommands";
 
-  char *argv[2];
-
-  argv[0] = "listcommands";
-
-  ShowFuncNames(1,argv);
-
+    ShowFuncNames(1, argv);
 }
+
 
 int PrintCommandList()
 {
-  NSListCommands();
+    NSListCommands();
 }
 
 
-/* int G2Initialize(char *pcOptionsOrSo) */
+/* int HocInitialize(char *pcOptionsOrSo) */
 /* { */
 /*     /// \note gosh, I had to do the same hack when integrating neurospaces */
 /*     /// \note with genesis2/hsolve. */

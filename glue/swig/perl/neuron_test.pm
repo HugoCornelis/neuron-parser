@@ -35,12 +35,12 @@ $SIG{__DIE__}
 
 use Data::Dumper;
 
-use SLI;
+use Neuron;
 
 
-print "SLI loaded\n";
+print "Neuron loaded\n";
 
-SLI::include_script("sli_test.g");
+Neuron::include_script("hoc_test.hoc");
 
 print "Perl script finished\n";
 

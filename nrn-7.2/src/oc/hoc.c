@@ -16,6 +16,8 @@
 #include <go32.h>
 #endif
 
+#include "neurospaces/neurospaces.h"
+
 #if defined(USE_PYTHON)
 int use_python_interpreter = 0;
 void (*p_nrnpython_start)();
@@ -823,14 +825,48 @@ hocstr_copy(hs, buf) HocStr* hs; char* buf; {
 	strcpy(hs->buf, buf);
 }
 
+struct Neurospaces;
+
+int NSNeuronInitialize(struct Neurospaces *pneuro)
+{
+    if (!pneuro)
+    {
+	//- create one with an empty model
+
+	char *ppvArgs[] =
+	    {
+		"genesis-neurospaces-bridge",
+		"/usr/local/neurospaces/models/library/utilities/empty_model.ndf",
+		"empty_model.ndf",
+		NULL,
+		NULL,
+	    };
+
+	pneuro = NeurospacesNewFromCmdLine(2, &ppvArgs[0]);
+
+	if (!pneuro)
+	{
+	    fprintf(stderr, "Error initializing neurospaces model container\n");
+
+	    return -1;
+	}
+    }
+
+    return 1;
+}
+
+
 #if defined(CYGWIN)
 static int cygonce; /* does not need the '-' after a list of hoc files */
 #endif
 
+struct Neurospaces;
+
 static hoc_run1();
 
-hoc_main1(argc, argv, envp)	/* hoc6 */
+hoc_main1(argc, argv, envp, pneuro)	/* hoc6 */
 	char *argv[], *envp[];
+struct Neurospaces *pneuro;
 {
 #ifdef WIN32
 	hoc_set_unhandled_exception_filter();
@@ -864,6 +900,18 @@ hoc_main1(argc, argv, envp)	/* hoc6 */
 		control_jmpbuf = 0;
 	}
 #endif
+
+	if (NSNeuronInitialize(pneuro) < 0 )
+	{
+	    fprintf(stderr, "Error initializing the Neurospaces model container.\n"); 
+
+	    return;
+	}
+	else
+	{
+	    fprintf(stdout, "The Neurospaces model container initialized.\n");
+	}
+
 	gargv = argv;
 	gargc = argc;
 	if ( argc > 2 && strcmp(argv[1], "-bbs_nhost") == 0) {

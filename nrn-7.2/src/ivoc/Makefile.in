@@ -416,7 +416,10 @@ ivoc_LDADD = ../oc/nocable.o ../oc/modlreg.o \
 	libivoc.la ../nrnmpi/libnrnmpi.la \
 	@MEMACSLIBLA@ ../mesch/libmeschach.la \
 	../gnu/libneuron_gnu.la $(IVOS_DIR) \
-	$(IV_LIBS) @NRN_READLINE_LIBS@ @NRNJAVA_LIBLA@
+	$(IV_LIBS) @NRN_READLINE_LIBS@ @NRNJAVA_LIBLA@ \
+	-L/usr/local/lib/model-container \
+	-lneurospacesread \
+	-lsymbol_algorithms
 
 libobjdir = $(libdir)
 libobj_DATA = nrnmain.o ivocmain.o

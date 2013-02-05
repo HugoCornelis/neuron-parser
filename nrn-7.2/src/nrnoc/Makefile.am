@@ -51,8 +51,8 @@ HOC_E_DEP = ../e_editor/hoc_ed
 PTHREAD_CC=@PTHREAD_CC@
 PTHREAD_CFLAGS=@PTHREAD_CFLAGS@
 PTHREAD_LIBS=@PTHREAD_LIBS@
-AM_CFLAGS = @MINGW_CFLAG@ $(PTHREAD_CFLAGS)
-AM_CPPFLAGS = -DCABLE=1 -DOOP=1 -DPRE_PROTO_TRAVERSAL
+AM_CFLAGS = @MINGW_CFLAG@ $(PTHREAD_CFLAGS) -I/usr/local/neurospaces/instrumentor -DPRE_PROTO_TRAVERSAL
+AM_CPPFLAGS = -DCABLE=1 -DOOP=1 -I/usr/local/neurospaces/instrumentor -DPRE_PROTO_TRAVERSAL
 nsrc=$(top_srcdir)/src
 INCLUDES = -I$(top_builddir)/src/oc -I$(nsrc)/oc -I$(nsrc)/scopmath -I$(nsrc)/sparse13 -I/usr/local/neurospaces/instrumentor -I/usr/local/heccer
 NMODL = ../nmodl/nocmodl

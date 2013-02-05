@@ -1,8 +1,8 @@
 ## Basic HOC library:
 lib_LTLIBRARIES = liboc.la libocxt.la
 
-AM_CPPFLAGS = -DOOP=1 -DINTERVIEWS=1 -DHOC=1
-AM_CFLAGS = @MINGW_CFLAG@
+AM_CPPFLAGS = -DOOP=1 -DINTERVIEWS=1 -DHOC=1 -I/usr/local/neurospaces/instrumentor -DPRE_PROTO_TRAVERSAL
+AM_CFLAGS = @MINGW_CFLAG@ -I/usr/local/neurospaces/instrumentor -DPRE_PROTO_TRAVERSAL
 
 nsrc=$(top_srcdir)/src
 INCLUDES = -I$(nsrc)/memacs -I$(nsrc)/sparse $(X_CFLAGS)
@@ -39,11 +39,15 @@ oc_SOURCES = ocmain.c ocnoiv.c nocable.c modlreg.c ockludge.c
 
 oc_LDADD = libocxt.la liboc.la \
 	../nrnmpi/libnrnmpi.la \
-	@MEMACSLIBLA@ @NRN_READLINE_LIBS@
+	@MEMACSLIBLA@ \
+	@NRN_READLINE_LIBS@ \
+	-L/usr/local/lib/model-container \
+	-lneurospacesread \
+	-lsymbol_algorithms
 
 hocdec.h: hoc.h hoc2dec.sh
 	./hoc2dec.sh
-	
+
 ## Header files that need to be installed:
 pkginclude_HEADERS = hoc.h hoclist.h hocdec.h hocassrt.h nrnisaac.h \
 	nrnpthread.h

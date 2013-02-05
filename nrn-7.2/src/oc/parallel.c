@@ -195,7 +195,7 @@ parallel_hoc_main(i)
 	}
 
 	/* run is killed at end of parallel for-loop (hoc_parallel_end()) */
-   	hoc_main1(_largc, _largv, _lenvp);   
+   	hoc_main1(_largc, _largv, _lenvp, NULL);   
 #endif
 	return 0;
 }
