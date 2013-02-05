@@ -82,7 +82,7 @@ int IncludeHocModel(char *pcMorphologyDirectory, char *pcScript, void *pvNeurosp
 {
     //- the modeling service is neurospaces
 
-    struct Neurospaces *pneuro = (struct Neurospaces *)pvNeurospaces;
+    struct Neurospaces *pneuro = (struct Neurospaces *) pvNeurospaces;
 
     char *argv[20];
 
