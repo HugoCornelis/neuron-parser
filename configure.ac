@@ -224,7 +224,7 @@ case "$host_os" in
     SWIGCOMPILECOMMAND_PYTHON='gcc         $(SWIGCOMPILELINKSFORPYTHON)         -c swiggable_neuron_wrap.c'
     AC_SUBST(SWIGCOMPILECOMMAND_PYTHON)
 
-    SWIGLDLINKSFORPYTHON='-L$(PYTHON_HEADERS)         -framework Python         -flat_namespace         -undefined suppress 	-bundle 	-bundle_loader $(PYTHON_EXE) -fPIC '
+    SWIGLDLINKSFORPYTHON='-L$(PYTHON_HEADERS)         -framework Python         -flat_namespace         -undefined suppress 	-bundle -bundle_loader $(PYTHON_EXE) -fPIC '
     AC_SUBST(SWIGLDLINKSFORPYTHON)
 
 
@@ -248,7 +248,7 @@ case "$host_os" in
 
           AC_SUBST(SWIGLINKCOMMAND_PERL)
 
-	  SWIGLINKCOMMAND_PYTHON='ld 	$(SWIGLDLINKSFORPYTHON) -o _SwiggableNeuron.$(PYTHONLIB_EXTENSION)  swiggable_neuron_wrap.o  /usr/lib/bundle1.o'
+	  SWIGLINKCOMMAND_PYTHON='ld $(SWIGLDLINKSFORPYTHON) -o _SwiggableNeuron.$(PYTHONLIB_EXTENSION)  swiggable_neuron_wrap.o  /usr/lib/bundle1.o'
           AC_SUBST(SWIGLINKCOMMAND_PYTHON)
 
        ;;
@@ -256,10 +256,10 @@ case "$host_os" in
 
 	  dnl All other mac versions. 
           dnl note: Leopard is i386-apple-darwin9.8.0
-          SWIGLINKCOMMAND_PERL='ld 	$(SWIGLDLINKSFORPERL) 	-o SwiggableNeuron.$(PERLLIB_EXTENSION) 	swiggable_neuron_wrap.o /usr/lib/bundle1.o'
+          SWIGLINKCOMMAND_PERL='ld $(SWIGLDLINKSFORPERL) -o SwiggableNeuron.$(PERLLIB_EXTENSION) swiggable_neuron_wrap.o /usr/lib/bundle1.o'
           AC_SUBST(SWIGLINKCOMMAND_PERL)
 
-	  SWIGLINKCOMMAND_PYTHON='ld 	$(SWIGLDLINKSFORPYTHON) 	-o _SwiggableNeuron.$(PYTHONLIB_EXTENSION) swiggable_neuron_wrap.o /usr/lib/bundle1.o'
+	  SWIGLINKCOMMAND_PYTHON='ld $(SWIGLDLINKSFORPYTHON) -o _SwiggableNeuron.$(PYTHONLIB_EXTENSION) swiggable_neuron_wrap.o /usr/lib/bundle1.o'
           AC_SUBST(SWIGLINKCOMMAND_PYTHON)
 
        ;;
@@ -290,7 +290,7 @@ case "$host_os" in
 
 
     #-- Here we determine the install path for perl modules --
-    AC_MSG_CHECKING([Checking the perl module installation path])	
+    AC_MSG_CHECKING([Checking the perl module installation path])
     pmdir_relative_path=`\
       $PERL -MConfig \
         -wle '($_ = $Config{installsitelib})
@@ -329,7 +329,7 @@ case "$host_os" in
     AC_SUBST(SWIGCOMPILECOMMAND_PERL)
 
 
-    SWIGLDLINKSFORPERL='-g -shared swiggable_neuron_wrap.o -L$(top_builddir) -lexperiment -lheccer -L$(top_builddir)/integrators -L/usr/local/lib/model-container -lneurospacesread -lsymbol_algorithms -lncurses -lreadline -lhistory -fPIC	-L${libdir}/model-container -lneurospacesread	-L${libdir}/model-container/ -lsymbol_algorithms	-lexperiment -L${libdir}/heccer -lheccer	-L${libdir}/heccer -lhneurospaces	-fPIC $(SYSLIBLINKS)'
+    SWIGLDLINKSFORPERL='-g -shared swiggable_neuron_wrap.o $(top_builddir)/nrn-7.2/src/nrnoc/.libs/*.o -L$(top_builddir) -lexperiment -lheccer -L$(top_builddir)/integrators -L/usr/local/lib/model-container -lneurospacesread -lsymbol_algorithms -lncurses -lreadline -lhistory -fPIC -L${libdir}/model-container -lneurospacesread -L${libdir}/model-container/ -lsymbol_algorithms -lexperiment -L${libdir}/heccer -lheccer -L${libdir}/heccer -lhneurospaces -fPIC $(SYSLIBLINKS)'
     AC_SUBST(SWIGLDLINKSFORPERL)
 
     SWIGLINKCOMMAND_PERL='gcc $(SWIGLDLINKSFORPERL) -o SwiggableNeuron.$(PERLLIB_EXTENSION)'
