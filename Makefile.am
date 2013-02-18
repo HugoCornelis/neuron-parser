@@ -58,7 +58,7 @@ clean-local:
 dist-hook: 
 	$(srcdir)/install-sh -d $(distdir)/tests
 	$(srcdir)/install-sh -d $(distdir)/tests/html
-	( cd $(distdir)/tests && chmod -R u+w . && ./tests_2_html --introduction introduction.html )
+	( cd $(distdir)/tests && chmod -R u+w . && neurospaces_harness_2_html --introduction introduction.html )
 
 #install-data-local: neurospaces_cpan_modules
 
@@ -79,7 +79,7 @@ test: check
 TESTS = /usr/local/bin/neurospaces_harness
 
 html-upload-prepare:
-	( cd tests && ./tests_2_html --introduction introduction.html )
+	( cd tests && neurospaces_harness_2_html --introduction introduction.html )
 	$(srcdir)/install-sh -d html
 	$(srcdir)/install-sh -d html/htdocs
 	$(srcdir)/install-sh -d html/htdocs/neurospaces_project
