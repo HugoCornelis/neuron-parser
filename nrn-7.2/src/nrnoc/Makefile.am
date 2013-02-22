@@ -13,7 +13,7 @@ nrnoc_LDADD = \
 	../nrnmpi/libnrnmpi.la \
 	@NRN_READLINE_LIBS@ \
 	@PTHREAD_LIBS@ \
-	-L$(libdir)/../../lib/model-container -lneurospacesread -lsymbol_algorithms
+	-L/usr/lib/model-container -lneurospacesread -lsymbol_algorithms
 
 ## The shared library that we make from this directory.
 lib_LTLIBRARIES = libnrnoc.la 

@@ -1,10 +1,8 @@
+/* A Bison parser, made by GNU Bison 2.5.  */
 
-/* A Bison parser, made by GNU Bison 2.4.1.  */
-
-/* Skeleton interface for Bison's Yacc-like parsers in C
+/* Bison interface for Yacc-like parsers in C
    
-      Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002, 2003, 2004, 2005, 2006
-   Free Software Foundation, Inc.
+      Copyright (C) 1984, 1989-1990, 2000-2011 Free Software Foundation, Inc.
    
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -40,18 +38,18 @@
       know about them.  */
    enum yytokentype {
      EQNEQ = 258,
-     NUMBER = 259,
-     STRING = 260,
-     PRINT = 261,
-     parseDELETE = 262,
-     VAR = 263,
-     BLTIN = 264,
-     UNDEF = 265,
-     WHILE = 266,
-     IF = 267,
-     ELSE = 268,
-     FOR = 269,
-     FUNCTION = 270,
+     FUNCTION = 259,
+     NUMBER = 260,
+     STRING = 261,
+     PRINT = 262,
+     parseDELETE = 263,
+     VAR = 264,
+     BLTIN = 265,
+     UNDEF = 266,
+     WHILE = 267,
+     IF = 268,
+     ELSE = 269,
+     FOR = 270,
      PROCEDURE = 271,
      RETURN = 272,
      FUNC = 273,
@@ -125,18 +123,18 @@
 #endif
 /* Tokens.  */
 #define EQNEQ 258
-#define NUMBER 259
-#define STRING 260
-#define PRINT 261
-#define parseDELETE 262
-#define VAR 263
-#define BLTIN 264
-#define UNDEF 265
-#define WHILE 266
-#define IF 267
-#define ELSE 268
-#define FOR 269
-#define FUNCTION 270
+#define FUNCTION 259
+#define NUMBER 260
+#define STRING 261
+#define PRINT 262
+#define parseDELETE 263
+#define VAR 264
+#define BLTIN 265
+#define UNDEF 266
+#define WHILE 267
+#define IF 268
+#define ELSE 269
+#define FOR 270
 #define PROCEDURE 271
 #define RETURN 272
 #define FUNC 273
@@ -214,7 +212,7 @@
 typedef union YYSTYPE
 {
 
-/* Line 1676 of yacc.c  */
+/* Line 2068 of yacc.c  */
 #line 86 "parse.y"
 				/* stack type */
 	Symbol	*sym;			/* symbol table pointer */
@@ -223,8 +221,8 @@ typedef union YYSTYPE
 
 
 
-/* Line 1676 of yacc.c  */
-#line 228 "parse.h"
+/* Line 2068 of yacc.c  */
+#line 226 "parse.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

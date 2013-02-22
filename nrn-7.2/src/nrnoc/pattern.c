@@ -168,7 +168,7 @@ static void nrn_alloc(_prop)
  pnt_receive[_mechtype] = _net_receive;
  pnt_receive_size[_mechtype] = 1;
  	hoc_register_var(hoc_scdoub, hoc_vdoub, hoc_intfunc);
- 	ivoc_help("help ?1 PatternStim /home/hugo/neurospaces_project/neuron-parser/source/snapshots/0/nrn-7.2/src/nrnoc/./pattern.mod\n");
+ 	ivoc_help("help ?1 PatternStim /home/db/neurospaces_project/neuron-parser/source/snapshots/0/nrn-7.2/src/nrnoc/./pattern.mod\n");
  hoc_register_limits(_mechtype, _hoc_parm_limits);
  hoc_register_units(_mechtype, _hoc_parm_units);
  }

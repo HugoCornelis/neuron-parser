@@ -90,8 +90,15 @@ static Inst* argcode(), *argrefcode();
 }
 
 %token		EQNEQ
+%token	<sym>	FUNCTION 
 %token	<sym>	NUMBER STRING PRINT parseDELETE VAR BLTIN UNDEF WHILE IF ELSE FOR
-%token	<sym>	FUNCTION PROCEDURE RETURN FUNC parsePROC HOCOBJFUNC READ parseDOUBLE
+%token	<sym>	PROCEDURE 
+%token	<sym>	RETURN 
+%token	<sym>	FUNC 
+%token	<sym>	parsePROC 
+%token	<sym>	HOCOBJFUNC 
+%token	<sym>	READ 
+%token	<sym>	parseDOUBLE
 %token	<sym>	DEBUG EDIT FUN_BLTIN DEPENDENT EQUATION LOCAL HOCOBJFUNCTION
 %token	<sym>	BREAK CONTINUE AUTO STRDEF STOPSTMT CSTRING PARALLEL HELP
 %token	<sym>	ITERATOR ITERKEYWORD ITERSTMT STRINGFUNC OBJECTFUNC
