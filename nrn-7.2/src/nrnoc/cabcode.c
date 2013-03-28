@@ -112,7 +112,7 @@ oc_save_cabcode(a1, a2)
 	int	*a1;
 	int	*a2;
 {
-	printf("NP:Yet an other fun4tion");
+	printf("NP:Yoc_save_cabcode(a1, a2)");
 	*a1 = isecstack;
 	*a2 = section_object_seen;
 }
@@ -153,6 +153,7 @@ nrn_pushsec(sec)
 #endif
 		++sec->refcount;
 	}
+	printf("NP:nrn_pushsec() end\n");
 }
 
 nrn_popsec() {
@@ -296,7 +297,7 @@ static Section* new_section(ob, sym, i)
 	Symbol* sym;
 	int i;
 {
-	printf("NP:new_section(ob,sym,i)");
+	printf("NP:new_section(ob,sym,i)\n");
 	Section* sec;
 	Prop* prop;
 	static Symbol* nseg;
@@ -322,11 +323,13 @@ static Section* new_section(ob, sym, i)
 	d = (double)DEF_nseg;
 	cable_prop_assign(nseg, &d, 0);
 	tree_changed = 1;
-/*printf("new_section %s\n", secname(sec));*/
-
+	/*printf("new_section %s\n", secname(sec));*/
+	
+	//- create a segment in the neurospaces model-container
 	struct symtab_HSolveListElement *phsleChild = (struct symtab_HSolveListElement *)SegmentCalloc();
+	
 
-
+	printf("NP:new_section(ob,sym,i) end\n");
 	return sec;
 }
 	
@@ -731,7 +734,7 @@ connectsection() /* 2 expr on stack and section symbol on section stack */
 static Section *
 Sec_access()	/* section symbol at pc */
 {
-
+	printf("NP:Sec_access()\n");
 	Objectdata* odsav;
 	Object* obsav = 0;
 	Symlist* slsav;
@@ -1942,7 +1945,7 @@ int
 segment_limits(pdx)
 	double *pdx;
 {
-	printf("NP:\n");
+	printf("NP:segment_limits(pdx)\n");
 	int n;
 	Section* sec;
 	double l;
@@ -1968,7 +1971,7 @@ node_exact(sec, x)
 	Section *sec;
 	double x;
 {
-	printf("NP:\n");
+	printf("NP:node_exact(sec, x)\n");
 	/* like node_index but give proper node when
 		x is 0 or 1 as well as in between
 	*/
@@ -2019,7 +2022,7 @@ node_ptr(sec, x, parea) /* returns pointer to proper node */
 	Section *sec;	/* and the area of the node */
 	double x, *parea;
 {
-	printf("NP:\n");
+	printf("NP:node_ptr(sec, x, parea)\n");
 	Node *nd;
 
 	nd = node_exact(sec, x);
@@ -2033,7 +2036,7 @@ node_ptr(sec, x, parea) /* returns pointer to proper node */
 }
 
 int nrn_get_mechtype(mechname) char* mechname; {
-	printf("NP:\n");
+	printf("NP:int nrn_get_mechtype(mechname)\n");
 	Symbol* s;
 	s = hoc_lookup(mechname);
 	assert(s);
@@ -2046,7 +2049,7 @@ int nrn_get_mechtype(mechname) char* mechname; {
 
 #if VECTORIZE
 int nrn_instance_count(mechtype) int mechtype; {
-	printf("NP:\n");
+	printf("NP:int nrn_instance_count(mechtype)\n");
 	if (v_structure_change) {
 		v_setup_vectors();
 	}
@@ -2066,7 +2069,7 @@ double* nrn_vext_pd(s, indx, nd)
 	int indx;
 	Node* nd;
 {
-	printf("NP:\n");
+	printf("NP:double* nrn_vext_pd(s, indx, nd)\n");
 	static double zero;
 	if (s->u.rng.type != EXTRACELL) {return (double*)0;}
 #if I_MEMBRANE
@@ -2099,7 +2102,7 @@ double* dprop(s, indx, sec, inode) /* returns location of property symbol */
 	short inode;
 	int indx;
 {
-	printf("NP:\n");
+	printf("NP:double* dprop(s, indx, sec, inode)\n");
 	Prop *m;
 	
 	m = nrn_mechanism_check(s->u.rng.type, sec, inode);
@@ -2136,7 +2139,7 @@ double* nrnpy_dprop(s, indx, sec, inode, err) /* returns location of property sy
 	int indx;
 	int* err;
 {
-	printf("NP:\n");
+	printf("NP:double* nrnpy_dprop(s, indx, sec,\n");
 	Prop *m;
 	
 	m = nrn_mechanism(s->u.rng.type, sec->pnode[inode]);
@@ -2170,7 +2173,7 @@ double **p = &((m->dparam)[s->u.rng.index + indx].pval);
 }
 
 static char* objectname() {
-	printf("NP:\n");
+	printf("NP:static char* objectname()\n");
 	static char buf[100];
 	if (hoc_thisobject) {
 		Sprintf(buf, "%s", hoc_object_name(hoc_thisobject));
@@ -2183,7 +2186,7 @@ static char* objectname() {
 #define relative(pc)	(pc + (pc)->i)
 
 forall_section() {
-	printf("NP:\n");
+	printf("NP:forall_section()\n");
 	/*statement pointed to by pc
 	continuation pointed to by pc+1. template used is shortfor in code.c
 	of hoc system.
@@ -2255,7 +2258,7 @@ forall_section() {
 }
 
 hoc_ifsec() {
-	printf("NP:\n");
+	printf("NP:hoc_ifsec()\n");
 	Inst *savepc = pc;
 	char buf[200];
 	char** s;
@@ -2273,7 +2276,7 @@ hoc_ifsec() {
 }
 
 issection() { /* returns true if string is the access section */
-	printf("NP:\n");
+	printf("NP:issection()\n");
 	hoc_regexp_compile(gargstr(1));
 	if (hoc_regexp_search(secname(chk_access()))) {
 		ret(1.);
@@ -2284,7 +2287,7 @@ issection() { /* returns true if string is the access section */
 
 ismembrane() { /* return true if string is an inserted membrane in the
 		access section */
-	printf("NP:\n");
+	printf("NP:ismembrane()\n");
 	char *str;
 	Prop *p;
 
@@ -2300,12 +2303,12 @@ ismembrane() { /* return true if string is an inserted membrane in the
 
 
 char* secaccessname() {
-	printf("NP:\n");
+	printf("NP:char* secaccessname() \n");
 	return secname(chk_access());
 }
 
 sectionname() {
-	printf("NP:\n");
+	printf("NP:sectionname()\n");
 	char *buf, **cpp, **hoc_pgargstr();
 	
 	buf = secname(chk_access());
@@ -2315,7 +2318,7 @@ sectionname() {
 }
 
 hoc_secname() {
-	printf("NP:\n");
+	printf("NP:hoc_secname()\n");
 	static char *buf;
 	buf = secname(chk_access());
 	hoc_ret();
@@ -2323,7 +2326,7 @@ hoc_secname() {
 }
 
 this_section() {
-	printf("NP:\n");
+	printf("NP:this_section()\n");
 	/* return section number of currently accessed section at
 		arc length postition x */
 	
@@ -2332,7 +2335,7 @@ this_section() {
 	ret((double)(unsigned long)(sec));
 }
 this_node() {
-	printf("NP:\n");
+	printf("NP:this_node()\n");
 	/* return node number of currently accessed section at
 		arc length postition x */
 	
@@ -2343,7 +2346,7 @@ this_node() {
 	ret((double)(unsigned long)nd);
 }
 parent_section() {
-	printf("NP:\n");
+	printf("NP:parent_section()\n");
 	/* return section number of currently accessed section at
 		arc length postition x */
 	
@@ -2352,21 +2355,21 @@ parent_section() {
 	ret((double)(unsigned long)(sec->parentsec));
 }
 parent_connection() {
-	printf("NP:\n");
+	printf("NP:parent_connection() \n");
 	Section* sec;
 	sec = chk_access();
 	ret(nrn_connection_position(sec));
 }
 
 section_orientation() {
-	printf("NP:\n");
+	printf("NP:section_orientation()\n");
 	Section* sec;
 	sec = chk_access();
 	ret(nrn_section_orientation(sec));
 }
 
 parent_node() {
-	printf("NP:\n");
+	printf("NP:parent_node()\n");
 	Section* sec;
 	hoc_execerror("parent_node() needs to be re-implemented", 0);
 	sec = chk_access();
@@ -2374,7 +2377,7 @@ parent_node() {
 }
 
 pop_section() {
-	printf("NP:\n");
+	printf("NP:pop_section()\n");
 	--skip_secstack_check;
 	if (skip_secstack_check < 0) { skip_secstack_check = 0; }
 	nrn_popsec();
@@ -2386,13 +2389,12 @@ statement) between exlicit user level push_section,etc and pop_section
 */
 
 hoc_level_pushsec(sec) Section* sec; {
-	printf("NP:\n");
+	printf("NP:hoc_level_pushsec(sec) \n");
 	++skip_secstack_check;
 	nrn_pushsec(sec);
 }
 	
 push_section() {
-	printf("NP:\n");
 	printf("NP:push_section\n");
 	Section* sec;
 	if (hoc_is_str_arg(1)) {
@@ -2429,7 +2431,7 @@ assign_hoc_str(str, val, global)
     char *str, *val;
     int global;
 {
-	printf("NP:\n");
+	printf("NP:assign_hoc_str(str, val, global)\n");
     Symbol *sym;
     char** pstr;
     Objectdata* obdsave = hoc_objectdata; /* save current dataspace */
@@ -2450,7 +2452,7 @@ assign_hoc_str(str, val, global)
 #endif
 
 section_exists() {
-	printf("NP:\n");
+	printf("NP:section_exists()\n");
 	int iarg, indx;
 	Symbol* sym;
 	Section* sec;
