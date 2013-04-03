@@ -492,6 +492,7 @@ nrn_chk_section(s)
 Section*
 chk_access()
 {
+	printf("NP:chk_access()\n");
 	Section* sec = secstack[isecstack];
 	if (!sec || !sec->prop) {
 		/* use any existing section as a default section */
@@ -514,6 +515,7 @@ chk_access()
 	}else{
 		execerror("Accessing a deleted section", (char*)0);
 	}
+	printf("NP:chk_access() end\n");
 }
 
 Section*
@@ -742,6 +744,7 @@ Sec_access()	/* section symbol at pc */
 	Symbol *s = (pc++)->sym;
 
 	if (!s) {
+	        printf("NP:Sec_access() end1\n");
 		return chk_access();
 	}
     if (s->public == 2) {
@@ -763,8 +766,12 @@ Sec_access()	/* section symbol at pc */
 	if (!itm) {
 		hoc_execerror(s->name, ": section was deleted");
 	}
+//	printf("NP:accessing \" %s with index\" %d \n", s->name,s->arayinfo->nsub);	
+//	printf("NP:accessing \" %s with index\" %d \n", s->name,s->arayinfo->refcount);	
+//	printf("NP:accessing \" %s with index\" %d \n", s->name,s->arayinfo->sub[0]);
+	printf("NP:accessing section %s\n",secname(itm->element.sec));
+	printf("NP:Sec_access() end2\n");
 	return itm->element.sec;
-	printf("SP:accessing %s with index \n", s->name);	
 #if 0
 printf("accessing %s with index %d\n", s->name, access_index);	
 #endif
@@ -851,6 +858,7 @@ node has no properties. This fact is spread everywhere in which
 nnode is dealt with */
 
 mech_access() {	/* section symbol at pc */
+	printf("mech_access()\n");
 	Section* sec = chk_access();
 	Symbol* s = (pc++)->sym;
 	mech_insert1(sec, s->subtype);
@@ -860,6 +868,7 @@ mech_insert1(sec, type)
 	Section* sec;
 	int type;
 {
+	printf("mech_insert1(sec, type)\n");
 	int n, i;
 	Node *nd, **pnd;
 	Prop *m;
@@ -921,6 +930,7 @@ mech_insert1(sec, type)
 }
 
 mech_uninsert() {
+	printf("NP:mech_uninsert()\n");
 	Section* sec = chk_access();
 	Symbol* s = (pc++)->sym;	
 	mech_uninsert1(sec, s);
@@ -930,6 +940,7 @@ mech_uninsert1(sec, s)
 	Section* sec;
 	Symbol* s;
 {
+	printf("NP:mech_uninsert1()\n");
 	/* remove the mechanism from the currently accessed section */
 	int n, i;
 	Prop *m, *mnext;
@@ -977,6 +988,7 @@ nrn_rangeconst(sec, s, pd, op)
 	double *pd;
 	int op;
 {
+	printf("NP:nrn_rangeconst(sec, s, pd, op)\n");
 	short n, i;
 	Node *nd;
 	int indx;
@@ -1028,6 +1040,7 @@ nrn_rangeconst(sec, s, pd, op)
 				*pd = hoc_opasgn(op, *dpr, d);
 			}
 			*dpr = *pd;
+			printf("NP:change1 section %s variable %s to %f\n",secname(sec),s->name,*dpr);
 		}
 		if (s->u.rng.type == MORPHOLOGY) {
 			sec->recalc_area_ = 1;
@@ -1070,6 +1083,7 @@ nrn_rangeconst(sec, s, pd, op)
 
 range_const()	/* rangevariable symbol at pc, value on stack */
 {
+	printf("range_const()\n");
 	Section* sec;
 	double d;
 	int op;
@@ -1612,8 +1626,10 @@ cable_prop_assign(sym, pd, op)
 	double* pd;
 	int op;
 {
+	printf("NP:cable_prop_assign(sym, pd, op)\n");
 	Section* sec;
 	sec = nrn_sec_pop();
+	printf("NP:section %s sym %s value %f\n",secname(sec),sym->name,*pd);
 	switch(sym->u.rng.type) {
 	
 	case 0: /* not in property list so must be nnode */
@@ -1807,6 +1823,7 @@ char *
 secname(sec) /* name of section (for use in error messages) */
 	Section *sec;
 {
+	printf("NP:char * secname(sec)\n");
 	extern char* hoc_araystr();
 	static char name[512];
 	Symbol *s;
@@ -2103,6 +2120,8 @@ double* dprop(s, indx, sec, inode) /* returns location of property symbol */
 	int indx;
 {
 	printf("NP:double* dprop(s, indx, sec, inode)\n");
+	printf("Section %s %s \n",secname(sec),s->name);
+
 	Prop *m;
 	
 	m = nrn_mechanism_check(s->u.rng.type, sec, inode);
@@ -2113,13 +2132,17 @@ double* dprop(s, indx, sec, inode) /* returns location of property symbol */
 #else
 	if (m->type == EXTRACELL && s->u.rng.index == 3*(nlayer) + 1) {
 #endif
+	        printf("NP:double* dprop(s, indx, sec, inode) end 1\n");
 		return sec->pnode[inode]->extnode->v + indx;
 	}
 #endif
 	if (s->subtype != NRNPOINTER) {
 		if (m->ob) {
+	                printf("NP:double* dprop(s, indx, sec, inode) end 2\n");
 			return m->ob->u.dataspace[s->u.rng.index].pval + indx;
 		}else{
+	                printf("NP:double* dprop(s, indx, sec, inode) end 3\n");
+			printf("%f",*(&(m->param[s->u.rng.index]) + indx));
 			return &(m->param[s->u.rng.index]) + indx;
 		}
 	}else{
@@ -2127,6 +2150,7 @@ double **p = &((m->dparam)[s->u.rng.index + indx].pval);
 		if (!(*p)) {
 			hoc_execerror(s->name, "wasn't made to point to anything");
 		}
+	        printf("NP:double* dprop(s, indx, sec, inode) end 4\n");
 		return *p;
 	}
 }
