@@ -53,6 +53,7 @@ Object*
 nrn_new_pointprocess(sym)
 	Symbol* sym;
 {
+	printf("NP: nrn_new_pointprocess(sym(%s)",sym->name);
 	void* v;
 	Object* hoc_new_object(), *hoc_new_opoint();
 	Object* ob;
@@ -191,6 +192,7 @@ double loc_point_process(pointtype, v)
 	int pointtype;
 	void* v;
 {
+	printf("NP:double loc_point_process(pointtype(%d), v\n)",pointtype); 
 	extern int hoc_is_double_arg();
 	extern double chkarg();
 	extern Object** hoc_objgetarg();

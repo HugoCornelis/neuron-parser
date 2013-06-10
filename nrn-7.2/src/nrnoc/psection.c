@@ -13,7 +13,7 @@ psection()
 {
 	Section *sec;
 	Prop *p, *p1;
-	
+	printf("NP:--------- We should also print from g3\n");
 	sec = chk_access();
 	p = sec->prop;
 	Printf("%s {", secname(sec));

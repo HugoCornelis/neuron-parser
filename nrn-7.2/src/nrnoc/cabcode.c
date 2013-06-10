@@ -234,6 +234,7 @@ add_section() /* symbol at pc+1, number of indices at pc+2 */
 	
 	if (sym->type == SECTION) { int total, i;
 		total = hoc_total_array(sym);
+		printf("NP:total= %f\n",total);
 		for (i=0; i<total; ++i) {
 			sec_free(*(OPSECITM(sym) + i));
 		}
@@ -256,7 +257,7 @@ hoc_objectdata[sym->u.oboff].psecitm = pitm = (Item **)emalloc(size*sizeof(Item*
 	}else{
 		new_sections(hoc_thisobject, sym, pitm, size);
 	}
-        printf("NP:create %s %d \n",sym->name,size);
+        ////printf("NP:---------create %s %d \n",sym->name,size);
 #if 0
 printf("%s", s->name);
 for (i=0; i<ndim; i++) {printf("[%d]",s->arayinfo->sub[i]);}
@@ -297,7 +298,7 @@ static Section* new_section(ob, sym, i)
 	Symbol* sym;
 	int i;
 {
-	printf("NP:new_section(ob,sym,i)\n");
+	printf("NP:new_section(ob,sym(%s),i(%d))\n",sym->name,i);
 	Section* sec;
 	Prop* prop;
 	static Symbol* nseg;
@@ -320,6 +321,10 @@ static Section* new_section(ob, sym, i)
 	prop->dparam[PROP_PY_INDEX]._pvoid = (void*)0;
 #endif
 	nrn_pushsec(sec);
+        printf("NP:---------Create section %s \n",secname(sec));
+	//NP:  Default section parameters
+	//NP:  nseg=1  L=100um  Ra=35.4 ohm.cm diam=500um  cm=1us/cm^2 where u=μ
+	//NP:  units from-> http://www.neuron.yale.edu/neuron/static/docs/units/unitchart.html
 	d = (double)DEF_nseg;
 	cable_prop_assign(nseg, &d, 0);
 	tree_changed = 1;
@@ -432,7 +437,7 @@ double section_length(sec)
 int arc0at0(sec)
 	Section* sec;
 {
-	printf("NP:Yet fn other function2");
+	printf("NP:arc0at0()\n");
 	return ((sec->prop->dparam[3].val) ? 0 : 1);
 }
 
@@ -712,6 +717,8 @@ static connectsec_impl(parent, sec) Section* parent, *sec;
 	}
 	tree_changed = 1;
 	diam_changed = 1;
+	printf("NP:----------Connect  (parent(%s), at(%f))\n",secname(parent),d2);
+	printf("NP:   -------with child(%s) at(%f)\n",secname(sec),d1);
 }
 
 simpleconnectsection() /* 2 expr on stack and two sections on section stack */
@@ -766,11 +773,12 @@ Sec_access()	/* section symbol at pc */
 	if (!itm) {
 		hoc_execerror(s->name, ": section was deleted");
 	}
-//	printf("NP:accessing \" %s with index\" %d \n", s->name,s->arayinfo->nsub);	
-//	printf("NP:accessing \" %s with index\" %d \n", s->name,s->arayinfo->refcount);	
-//	printf("NP:accessing \" %s with index\" %d \n", s->name,s->arayinfo->sub[0]);
-	printf("NP:accessing section %s\n",secname(itm->element.sec));
-	printf("NP:Sec_access() end2\n");
+//NP:	printf("NP:accessing \" %s with index\" %d \n", s->name,s->arayinfo->nsub);	
+//NP:	printf("NP:accessing \" %s with index\" %d \n", s->name,s->arayinfo->refcount);	
+//NP:	printf("NP:accessing \" %s with index\" %d \n", s->name,s->arayinfo->sub[0]);
+//NP:   WE MIGHT NOT NEED THIS ONE
+	printf("NP:-------- Set accessing section %s\n",secname(itm->element.sec));
+
 	return itm->element.sec;
 #if 0
 printf("accessing %s with index %d\n", s->name, access_index);	
@@ -868,7 +876,8 @@ mech_insert1(sec, type)
 	Section* sec;
 	int type;
 {
-	printf("mech_insert1(sec, type)\n");
+	printf("mech_insert1(sec(%s), type(%d))\n",secname(sec),type);
+	printf("NP---------Insert mechanism(%d) in section %s\n ",type,secname(sec));
 	int n, i;
 	Node *nd, **pnd;
 	Prop *m;
@@ -1629,7 +1638,8 @@ cable_prop_assign(sym, pd, op)
 	printf("NP:cable_prop_assign(sym, pd, op)\n");
 	Section* sec;
 	sec = nrn_sec_pop();
-	printf("NP:section %s sym %s value %f\n",secname(sec),sym->name,*pd);
+	printf("NP:----------Assign something to section %s sym %s value %f\n",secname(sec),sym->name,*pd);
+	
 	switch(sym->u.rng.type) {
 	
 	case 0: /* not in property list so must be nnode */
@@ -1823,7 +1833,6 @@ char *
 secname(sec) /* name of section (for use in error messages) */
 	Section *sec;
 {
-	printf("NP:char * secname(sec)\n");
 	extern char* hoc_araystr();
 	static char name[512];
 	Symbol *s;
