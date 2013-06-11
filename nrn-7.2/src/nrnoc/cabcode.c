@@ -12,6 +12,7 @@
 #include "parse.h"
 #include "membdef.h"
 
+#include "neurospaces/components/cell.h"
 #include "neurospaces/components/segment.h"
 
 extern Object* hoc_thisobject;
@@ -331,8 +332,9 @@ static Section* new_section(ob, sym, i)
 	/*printf("new_section %s\n", secname(sec));*/
 	
 	//- create a segment in the neurospaces model-container
+
 	struct symtab_HSolveListElement *phsleChild = (struct symtab_HSolveListElement *)SegmentCalloc();
-	
+
 	//- give the name to the section
 
 	char *pcChild = strdup(secname(sec));
@@ -341,6 +343,59 @@ static Section* new_section(ob, sym, i)
 
 	SymbolSetName(phsleChild, pidinChild);
 
+	//- create the parent element if it does not exist yet.
+
+	char *pcParent = "/cell";
+
+	//- link it to the parent symbol in the model-container~s namespace
+
+	//- construct a context for the parent element
+
+	ppistParent = getRootedContext(pcParent);
+
+	if (ppistParent == NULL)
+	{
+	    fprintf(stderr, "Out of memory error when construction %s\n", name);
+
+	    return -1;
+	}
+
+	//- get a reference to the parent element
+
+	phsleParent = PidinStackLookupTopSymbol(ppistParent);  
+
+	if (!phsleParent)
+	{
+/* 	    fprintf(stderr,"Error:Symbol parent path (%s) not found\n",pcParent); */
+
+/* 	    return -1; */
+
+	    //- create a segment in the neurospaces model-container
+
+	    phsleParent = (struct symtab_HSolveListElement *)CellCalloc();
+
+	    //- give the name to the section
+
+	    char *pcParent = strdup("/cell");
+
+	    struct symtab_IdentifierIndex *pidinParent = IdinNewFromChars(pcParent);
+
+	    SymbolSetName(phsleParent, pidinParent);
+
+	    //- link the created cell with the root symbol in the model-container
+	}
+
+	//- link parent and child, this makes the child element available from the namespace
+
+	SymbolAddChild(phsleParent, phsleChild);
+
+	SymbolRecalcAllSerials(phsleParent, ppistParent);    
+
+	//- deallocate context that references the parent
+
+	//- note: this does not deallocate the parent symbol
+
+	PidinStackFree(ppistParentt);
 
 
 	printf("NP:new_section(ob,sym,i) end\n");
@@ -728,6 +783,54 @@ static connectsec_impl(parent, sec) Section* parent, *sec;
 	diam_changed = 1;
 	printf("NP:----------Connect  (parent(%s), at(%f))\n",secname(parent),d2);
 	printf("NP:   -------with child(%s) at(%f)\n",secname(sec),d1);
+
+	// then we need to link it to the parent element in the model-container~s namespace
+
+	//- construct a context for the parent element
+
+	struct PidinStack *ppistParent = getRootedContext(secname(parent));
+
+	if (ppistParent == NULL)
+	{
+	    fprintf(stderr, "Out of memory error when construction %s\n", secname(parent));
+
+	    // return -1;
+	}
+
+	//- get a reference to the parent element
+
+	struct symtab_HSolveListElement *phsleParent = PidinStackLookupTopSymbol(ppistParent);  
+
+	if (!phsleParent)
+	{
+	    fprintf(stderr,"Error:Symbol parent path (%s) not found\n", secname(parent));
+
+	    // return -1;
+	}
+
+	//- construct a context for the child element
+
+	struct PidinStack *ppistChild = getRootedContext(secname(sec));
+
+	if (ppistChild == NULL)
+	{
+	    fprintf(stderr, "Out of memory error when construction %s\n", secname(sec));
+
+	    // return -1;
+	}
+
+	//- get a reference to the child element
+
+	struct symtab_HSolveListElement *phsleChild = PidinStackLookupTopSymbol(ppistChild);  
+
+	if (!phsleChild)
+	{
+	    fprintf(stderr,"Error:Symbol parent path (%s) not found\n", secname(sec));
+
+	    // return -1;
+	}
+
+
 }
 
 simpleconnectsection() /* 2 expr on stack and two sections on section stack */
