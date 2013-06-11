@@ -235,7 +235,6 @@ add_section() /* symbol at pc+1, number of indices at pc+2 */
 	
 	if (sym->type == SECTION) { int total, i;
 		total = hoc_total_array(sym);
-		printf("NP:total= %f\n",total);
 		for (i=0; i<total; ++i) {
 			sec_free(*(OPSECITM(sym) + i));
 		}
@@ -351,7 +350,7 @@ static Section* new_section(ob, sym, i)
 
 	//- construct a context for the parent element
 
-	ppistParent = getRootedContext(pcParent);
+	struct PidinStack *ppistParent = getRootedContext(pcParent);
 
 	if (ppistParent == NULL)
 	{
@@ -383,6 +382,7 @@ static Section* new_section(ob, sym, i)
 	    SymbolSetName(phsleParent, pidinParent);
 
 	    //- link the created cell with the root symbol in the model-container
+   	    SymbolAddChild(phsleParent,pidinChild);
 	}
 
 	//- link parent and child, this makes the child element available from the namespace
