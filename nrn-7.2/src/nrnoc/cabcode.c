@@ -333,6 +333,15 @@ static Section* new_section(ob, sym, i)
 	//- create a segment in the neurospaces model-container
 	struct symtab_HSolveListElement *phsleChild = (struct symtab_HSolveListElement *)SegmentCalloc();
 	
+	//- give the name to the section
+
+	char *pcChild = strdup(secname(sec));
+
+	struct symtab_IdentifierIndex *pidinChild = IdinNewFromChars(pcChild);
+
+	SymbolSetName(phsleChild, pidinChild);
+
+
 
 	printf("NP:new_section(ob,sym,i) end\n");
 	return sec;
