@@ -382,7 +382,12 @@ static Section* new_section(ob, sym, i)
 	    SymbolSetName(phsleParent, pidinParent);
 
 	    //- link the created cell with the root symbol in the model-container
-   	    SymbolAddChild(phsleParent,pidinChild);
+
+	    struct PidinStack *ppistRoot = getRootedContext("/");
+
+	    struct symtab_HSolveListElement *phsleRoot = PidinStackLookupTopSymbol(ppistRoot);
+
+	    SymbolAddChild(phsleRoot, phsleParent);
 	}
 
 	//- link parent and child, this makes the child element available from the namespace
