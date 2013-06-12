@@ -354,14 +354,14 @@ static Section* new_section(ob, sym, i)
 
 	if (ppistParent == NULL)
 	{
-	    fprintf(stderr, "Out of memory error when construction %s\n", name);
+	    fprintf(stderr, "Out of memory error when construction %s\n", pcParent);
 
-	    return -1;
+	    return NULL;
 	}
 
 	//- get a reference to the parent element
 
-	phsleParent = PidinStackLookupTopSymbol(ppistParent);  
+	struct symtab_HSolveListElement *phsleParent = PidinStackLookupTopSymbol(ppistParent);  
 
 	if (!phsleParent)
 	{
@@ -2712,3 +2712,63 @@ section_exists() {
 	}
 	ret((double)(sec && sec->prop));
 }
+
+
+char *getRootedPathname(char *pc)
+{
+    char pcBuff[1024];
+    char *pcCurrentElement = NULL;
+
+    if (pc[0] != '/')
+    {
+	pcCurrentElement = WorkingElementName();
+
+	strcpy(&pcBuff[0], pcCurrentElement);
+
+	//    pcCurrentElementPath = strdup(pcCurrentElement);
+
+	if (strcmp(pcCurrentElement, "/") != 0)
+	{
+	    strcat(pcBuff,"/");
+	}
+
+	//char *pcName = strdup(pc);
+    
+	strcat(pcBuff,pc);
+
+	return strdup(pcBuff);
+    }
+    else
+    {
+	// if rooted just return a copy
+
+	return strdup(pc);
+    }
+}
+
+
+struct PidinStack *getRootedContext(char *pc)
+{
+    if (!pc)
+    {
+	return NULL;
+    }
+
+    char *pcCurrentElementPath = getRootedPathname(pc);
+
+    if (!pcCurrentElementPath)
+    {
+	return NULL;
+    }
+
+    struct PidinStack *ppistResult
+	= PidinStackParse(pcCurrentElementPath);
+
+    free(pcCurrentElementPath);
+
+    PidinStackCompress(ppistResult);
+
+    return(ppistResult);
+}
+
+
