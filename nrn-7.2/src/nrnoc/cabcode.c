@@ -407,7 +407,7 @@ static Section* new_section(ob, sym, i)
 
 	//- note: this does not deallocate the parent symbol
 
-	PidinStackFree(ppistParentt);
+	PidinStackFree(ppistParent);
 
 
 	printf("NP:new_section(ob,sym,i) end\n");
@@ -2726,11 +2726,11 @@ char *getRootedPathname(char *pc)
 
     if (pc[0] != '/')
     {
-	pcCurrentElement = WorkingElementName();
-
+	//pcCurrentElement = WorkingElementName();
+	printf("*** ERROR: name should start with a /");
 	strcpy(&pcBuff[0], pcCurrentElement);
 
-	//    pcCurrentElementPath = strdup(pcCurrentElement);
+	//pcCurrentElementPath = strdup(pcCurrentElement);
 
 	if (strcmp(pcCurrentElement, "/") != 0)
 	{
