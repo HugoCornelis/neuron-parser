@@ -388,6 +388,8 @@ static Section* new_section(ob, sym, i)
 	    struct symtab_HSolveListElement *phsleRoot = PidinStackLookupTopSymbol(ppistRoot);
 
 	    SymbolAddChild(phsleRoot, phsleParent);
+
+	    PidinStackFree(ppistRoot);
 	}
 
 	//- link parent and child, this makes the child element available from the namespace
