@@ -1821,6 +1821,18 @@ cable_prop_assign(sym, pd, op)
 	Section* sec;
 	sec = nrn_sec_pop();
 	printf("NP:----------Assign something to section %s sym %s value %f\n",secname(sec),sym->name,*pd);
+
+	// secname(): a pathname of a section, for instance 'soma'
+	// sym->name:
+	//     Neuron	Neurospaces
+	//
+	//     L	LENGTH
+	//     nseg	ignore for now
+	//     Ra	RA
+	//     cm	CM
+	//     diam	DIA
+	//     		RM
+	// *pd: a valid float value
 	
 	switch(sym->u.rng.type) {
 	
