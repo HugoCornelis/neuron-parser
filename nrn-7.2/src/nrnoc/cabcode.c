@@ -375,7 +375,7 @@ static Section* new_section(ob, sym, i)
 
 	    //- give the name to the section
 
-	    char *pcParent = strdup("/cell");
+	    char *pcParent = strdup("cell");
 
 	    struct symtab_IdentifierIndex *pidinParent = IdinNewFromChars(pcParent);
 
@@ -791,13 +791,15 @@ static connectsec_impl(parent, sec) Section* parent, *sec;
 	printf("NP:----------Connect  (parent(%s), at(%f))\n",secname(parent),d2);
 	printf("NP:   -------with child(%s) at(%f)\n",secname(sec),d1);
 
+	// \todo: check d1 and d2 whether they have acceptable values (0 and 1)
+
 	// then we need to link it to the parent element in the model-container~s namespace
 
 	//- construct a context for the parent element
 
-	struct PidinStack *ppistParent = getRootedContext(secname(parent));
+	struct PidinStack *ppistSource = getRootedContext(secname(parent));
 
-	if (ppistParent == NULL)
+	if (ppistSource == NULL)
 	{
 	    fprintf(stderr, "Out of memory error when construction %s\n", secname(parent));
 
@@ -806,9 +808,9 @@ static connectsec_impl(parent, sec) Section* parent, *sec;
 
 	//- get a reference to the parent element
 
-	struct symtab_HSolveListElement *phsleParent = PidinStackLookupTopSymbol(ppistParent);  
+	struct symtab_HSolveListElement *phsleSource = PidinStackLookupTopSymbol(ppistSource);
 
-	if (!phsleParent)
+	if (!phsleSource)
 	{
 	    fprintf(stderr,"Error:Symbol parent path (%s) not found\n", secname(parent));
 
@@ -817,9 +819,9 @@ static connectsec_impl(parent, sec) Section* parent, *sec;
 
 	//- construct a context for the child element
 
-	struct PidinStack *ppistChild = getRootedContext(secname(sec));
+	struct PidinStack *ppistDestination = getRootedContext(secname(sec));
 
-	if (ppistChild == NULL)
+	if (ppistDestination == NULL)
 	{
 	    fprintf(stderr, "Out of memory error when construction %s\n", secname(sec));
 
@@ -828,16 +830,72 @@ static connectsec_impl(parent, sec) Section* parent, *sec;
 
 	//- get a reference to the child element
 
-	struct symtab_HSolveListElement *phsleChild = PidinStackLookupTopSymbol(ppistChild);  
+	struct symtab_HSolveListElement *phsleDestination = PidinStackLookupTopSymbol(ppistDestination);  
 
-	if (!phsleChild)
+	if (!phsleDestination)
 	{
 	    fprintf(stderr,"Error:Symbol parent path (%s) not found\n", secname(sec));
 
 	    // return -1;
 	}
 
+	//- construct the parent parameter
 
+	struct PidinStack *ppistParent
+	    = PidinStackSubtract(ppistSource, ppistDestination);
+
+	PidinStackCompress(ppistParent);
+
+	struct symtab_IdentifierIndex *pidinParent
+	    = PidinStackToPidinQueue(ppistParent);
+
+	struct symtab_Parameters *pparParentNew
+	    = ParameterNewFromPidinQueue("PARENT", pidinParent, TYPE_PARA_SYMBOLIC);
+
+/* 	//- if this symbol already has a parent parameter */
+
+/* 	struct symtab_Parameters *pparParentOld */
+/* 	    = SymbolFindParameter(phsleDestination, ppistDestination, "PARENT"); */
+
+/* 	if ((secname(parent))[0] == '/' */
+/* 	    && (secname(sec))[0] == '/') */
+/* 	{ */
+/* 	    //- use parameter caches */
+
+/* 	    int iSerialDestination = PidinStackToSerial(ppistDestination); */
+
+/* 	    if (iSerialDestination == INT_MAX) */
+/* 	    { */
+/* 		Error();  */
+
+/* 		printf("dest %s of axial msg cannot be converted to its serial.", secname(sec)); */
+
+/* 		PidinStackFree(ppistSource); */
+
+/* 		PidinStackFree(ppistDestination); */
+
+/* 		return 0; */
+/* 	    } */
+
+/* 	    struct PidinStack *ppistRoot = getRootedContext("/"); */
+
+/* 	    struct symtab_HSolveListElement *phsleRoot = PidinStackLookupTopSymbol(ppistRoot); */
+
+/* 	    SymbolCacheParameter(phsleRoot, PidinStackToSerial(ppistDestination), pparParentNew); */
+/* 	} */
+
+/* 	//- else */
+
+/* 	else */
+	{
+	    //- attach it to the symbol
+
+	    BioComponentChangeParameter((struct symtab_BioComponent *)phsleDestination, pparParentNew);
+	}
+
+	PidinStackFree(ppistSource);
+
+	PidinStackFree(ppistDestination);
 }
 
 simpleconnectsection() /* 2 expr on stack and two sections on section stack */
