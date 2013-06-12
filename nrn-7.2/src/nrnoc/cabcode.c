@@ -1833,7 +1833,16 @@ cable_prop_assign(sym, pd, op)
 	//     diam	DIA
 	//     		RM
 	// *pd: a valid float value
-	
+
+	if (strcmp(sym->name, "L") == 0)
+	{
+	    struct symtab_Parameters *ppar = ParameterNewFromNumber("LENGTH", *pd);
+
+	    phsle = PidinStackLookupTopSymbol( <something here>);
+
+	    BioComponentChangeParameter((struct symtab_BioComponent *)phsle, pparParentNew);
+	}
+
 	switch(sym->u.rng.type) {
 	
 	case 0: /* not in property list so must be nnode */
@@ -2788,6 +2797,90 @@ struct PidinStack *getRootedContext(char *pc)
     PidinStackCompress(ppistResult);
 
     return(ppistResult);
+}
+
+
+struct symtab_Parameters *newParameter(char *pcValue, int iType)
+{
+    //- set default result: failure
+
+    struct symtab_Parameters *pparResult = NULL;
+
+    if (iType == SETPARA_GENESIS2)
+    {
+	struct symtab_Parameters *pparScale = ParameterNewFromNumber("scale", 1.0);
+
+	double dValue = atof(pcValue);
+
+	struct symtab_Parameters *pparValue = ParameterNewFromNumber("value", dValue);
+
+	//- link parameters into a list
+
+	pparScale->pparFirst = pparScale;
+
+	pparScale->pparNext = pparValue;
+
+	pparValue->pparFirst = pparScale;
+
+	pparValue->pparNext = NULL;
+
+	struct symtab_Function *pfun = FunctionCalloc();
+
+	FunctionSetName(pfun, "GENESIS2");
+
+	FunctionAssignParameters(pfun, pparScale);
+
+	//- assign the scaling function to the parameter pparResult 
+
+	pparResult = ParameterCalloc();
+
+	pparResult->uValue.pfun = pfun;
+
+	ParameterSetType(pparResult, TYPE_PARA_FUNCTION);
+    }
+    else if( iType == SETPARA_HERE )
+    {
+	pparResult = ParameterCalloc();
+  
+	pparResult->uValue.dNumber = DBL_MAX; /* dHere; */
+
+	ParameterSetType(pparResult, TYPE_PARA_NUMBER);
+    }
+    else if( iType == SETPARA_NUM )
+    {
+	pparResult = ParameterCalloc();
+
+	double dValue = strtod(pcValue,NULL);
+
+	pparResult->uValue.dNumber = dValue;
+
+	ParameterSetType(pparResult, TYPE_PARA_NUMBER);
+    }
+    else if( iType == SETPARA_FIELD )
+    {
+	pparResult = ParameterCalloc();
+
+	struct PidinStack *ppistValue = PidinStackParse(pcValue);
+
+	struct symtab_IdentifierIndex *pidinValue
+	    = PidinStackToPidinQueue(ppistValue);
+
+	pparResult->uValue.pidin = pidinValue;
+
+	ParameterSetType(pparResult, TYPE_PARA_FIELD);
+    }
+    else
+    {
+	pparResult = ParameterCalloc();
+
+	pparResult->uValue.pcString = pcValue;
+
+	ParameterSetType(pparResult, TYPE_PARA_STRING);
+    }
+
+    //- return result
+
+    return(pparResult);
 }
 
 
