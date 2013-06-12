@@ -15,6 +15,11 @@
 #include "neurospaces/components/cell.h"
 #include "neurospaces/components/segment.h"
 
+
+char *getRootedPathname(char *pc);
+struct PidinStack *getRootedContext(char *pc);
+
+
 extern Object* hoc_thisobject;
 extern Object** hoc_objgetarg();
 extern Objectdata* hoc_top_level_data;
