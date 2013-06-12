@@ -2728,20 +2728,22 @@ char *getRootedPathname(char *pc)
     {
 	//pcCurrentElement = WorkingElementName();
 	printf("*** ERROR: name should start with a /");
-	strcpy(&pcBuff[0], pcCurrentElement);
+/* 	strcpy(&pcBuff[0], pcCurrentElement); */
 
-	//pcCurrentElementPath = strdup(pcCurrentElement);
+/* 	//pcCurrentElementPath = strdup(pcCurrentElement); */
 
-	if (strcmp(pcCurrentElement, "/") != 0)
-	{
-	    strcat(pcBuff,"/");
-	}
+/* 	if (strcmp(pcCurrentElement, "/") != 0) */
+/* 	{ */
+/* 	    strcat(pcBuff,"/"); */
+/* 	} */
 
-	//char *pcName = strdup(pc);
+/* 	//char *pcName = strdup(pc); */
     
-	strcat(pcBuff,pc);
+/* 	strcat(pcBuff,pc); */
 
-	return strdup(pcBuff);
+/* 	return strdup(pcBuff); */
+
+	return strdup(pc);
     }
     else
     {
