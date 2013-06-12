@@ -1833,14 +1833,28 @@ cable_prop_assign(sym, pd, op)
 	//     diam	DIA
 	//     		RM
 	// *pd: a valid float value
+	
+	struct PidinStack *ppistSource = getRootedContext(secname(sec));
+
+	if (ppistSource == NULL)
+	{
+	    fprintf(stderr, "Out of memory error when construction %s\n", secname(sec));
+
+	    // return -1;
+	}
+
+	//- get a reference to the parent element
+
+	struct symtab_HSolveListElement *phsleSource = PidinStackLookupTopSymbol(ppistSource);
+
 
 	if (strcmp(sym->name, "L") == 0)
 	{
 	    struct symtab_Parameters *ppar = ParameterNewFromNumber("LENGTH", *pd);
+	
+	    (struct symtab_BioComponent *)phsle = PidinStackLookupTopSymbol( ppistSource );
 
-	    phsle = PidinStackLookupTopSymbol( <something here>);
-
-	    BioComponentChangeParameter((struct symtab_BioComponent *)phsle, pparParentNew);
+	    BioComponentChangeParameter(phsle, ppar);
 	}
 
 	switch(sym->u.rng.type) {
