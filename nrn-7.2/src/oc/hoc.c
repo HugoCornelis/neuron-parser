@@ -827,9 +827,11 @@ hocstr_copy(hs, buf) HocStr* hs; char* buf; {
 
 struct Neurospaces;
 
-int NSNeuronInitialize(struct Neurospaces *pneuro)
+struct Neurospaces *pneuroGlobal = NULL;
+
+int NSNeuronInitialize(void)
 {
-    if (!pneuro)
+    if (!pneuroGlobal)
     {
 	//- create one with an empty model
 
@@ -842,9 +844,9 @@ int NSNeuronInitialize(struct Neurospaces *pneuro)
 		NULL,
 	    };
 
-	pneuro = NeurospacesNewFromCmdLine(2, &ppvArgs[0]);
+	pneuroGlobal = NeurospacesNewFromCmdLine(2, &ppvArgs[0]);
 
-	if (!pneuro)
+	if (!pneuroGlobal)
 	{
 	    fprintf(stderr, "Error initializing neurospaces model container\n");
 
@@ -852,7 +854,7 @@ int NSNeuronInitialize(struct Neurospaces *pneuro)
 	}
     }
 
-    return 1;
+    return pneuroGlobal;
 }
 
 
@@ -860,13 +862,10 @@ int NSNeuronInitialize(struct Neurospaces *pneuro)
 static int cygonce; /* does not need the '-' after a list of hoc files */
 #endif
 
-struct Neurospaces;
-
 static hoc_run1();
 
-hoc_main1(argc, argv, envp, pneuro)	/* hoc6 */
+hoc_main1(argc, argv, envp)	/* hoc6 */
 	char *argv[], *envp[];
-struct Neurospaces *pneuro;
 {
 #ifdef WIN32
 	hoc_set_unhandled_exception_filter();
@@ -901,7 +900,7 @@ struct Neurospaces *pneuro;
 	}
 #endif
 
-	if (NSNeuronInitialize(pneuro) < 0 )
+	if (NSNeuronInitialize() < 0 )
 	{
 	    fprintf(stderr, "Error initializing the Neurospaces model container.\n"); 
 
