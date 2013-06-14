@@ -16,7 +16,7 @@
 #include <go32.h>
 #endif
 
-#include "neurospaces/neurospaces.h"
+//#include "neurospaces/neurospaces.h"
 
 #if defined(USE_PYTHON)
 int use_python_interpreter = 0;
@@ -825,7 +825,7 @@ hocstr_copy(hs, buf) HocStr* hs; char* buf; {
 	strcpy(hs->buf, buf);
 }
 
-struct Neurospaces;
+//struct Neurospaces;
 
 struct Neurospaces *pneuroGlobal = NULL;
 

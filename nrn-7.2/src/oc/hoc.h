@@ -373,3 +373,5 @@ int node_num;
 int mytid;
 #endif
 
+#include "neurospaces/neurospaces.h"
+extern struct Neurospaces *pneuroGlobal;

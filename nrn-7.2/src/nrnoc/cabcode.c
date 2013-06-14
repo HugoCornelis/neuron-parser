@@ -14,6 +14,15 @@
 
 #include "neurospaces/components/cell.h"
 #include "neurospaces/components/segment.h"
+//- include nsintegrator.h
+//- #include "/usr/local/include/ns-sli/nsintegrator.h"
+//- include didn't work, so we directrly define the variables we need
+
+//- these comments are copied from the ns-sli and should be moved to a model-container commodity API.
+#define SETPARA_HERE 6
+#define SETPARA_NUM 3
+#define SETPARA_FIELD 5
+#define SETPARA_GENESIS2 2
 
 
 char *getRootedPathname(char *pc);
@@ -408,6 +417,10 @@ static Section* new_section(ob, sym, i)
 	//- note: this does not deallocate the parent symbol
 
 	PidinStackFree(ppistParent);
+	printf("++++++++++++++++++++++++++\n");
+	QueryMachineHandle(pneuroGlobal, "export no ndf STDOUT /**");
+	printf("++++++++++++++++++++++++++\n");
+
 
 
 	printf("NP:new_section(ob,sym,i) end\n");
@@ -1852,7 +1865,7 @@ cable_prop_assign(sym, pd, op)
 	{
 	    struct symtab_Parameters *ppar = ParameterNewFromNumber("LENGTH", *pd);
 	
-	    (struct symtab_BioComponent *)phsle = PidinStackLookupTopSymbol( ppistSource );
+	    struct symtab_BioComponent *phsle = PidinStackLookupTopSymbol( ppistSource );
 
 	    BioComponentChangeParameter(phsle, ppar);
 	}
@@ -2762,21 +2775,22 @@ char *getRootedPathname(char *pc)
     if (pc[0] != '/')
     {
 	//pcCurrentElement = WorkingElementName();
-	printf("*** ERROR: name should start with a /");
-/* 	strcpy(&pcBuff[0], pcCurrentElement); */
+	pcCurrentElement = "/";
+	printf("*** CAUTION: adding  / in frond of the element\n");
+ 	strcpy(&pcBuff[0], pcCurrentElement); 
 
-/* 	//pcCurrentElementPath = strdup(pcCurrentElement); */
+ 	//pcCurrentElementPath = strdup(pcCurrentElement); */
 
-/* 	if (strcmp(pcCurrentElement, "/") != 0) */
-/* 	{ */
-/* 	    strcat(pcBuff,"/"); */
-/* 	} */
+ 	if (strcmp(pcCurrentElement, "/") != 0) 
+	{ 
+ 	    strcat(pcBuff,"/"); 
+ 	} 
 
-/* 	//char *pcName = strdup(pc); */
+ 	//char *pcName = strdup(pc); */
     
-/* 	strcat(pcBuff,pc); */
+ 	strcat(pcBuff,pc); 
 
-/* 	return strdup(pcBuff); */
+ 	return strdup(pcBuff); 
 
 	return strdup(pc);
     }

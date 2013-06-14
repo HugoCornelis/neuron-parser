@@ -5,15 +5,19 @@
 #include "parse.h"
 #include "membfunc.h"
 
+//- Include the file that holds extern pneuroGlobal
+#include "../oc/hoc.h"
+
 extern char *secname();
 extern double nrn_ra();
 static pnode();
-
 psection()
 {
 	Section *sec;
 	Prop *p, *p1;
 	printf("NP:--------- We should also print from g3\n");
+	//QueryMachineHandle(pneuroGlobal, "export no ndf STDOUT /**");
+	QueryMachineHandle(pneuroGlobal, "");
 	sec = chk_access();
 	p = sec->prop;
 	Printf("%s {", secname(sec));
