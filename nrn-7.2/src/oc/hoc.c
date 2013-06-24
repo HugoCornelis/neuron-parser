@@ -844,8 +844,10 @@ int NSNeuronInitialize(void)
 		NULL,
 	    };
 
-	pneuroGlobal = NeurospacesNewFromCmdLine(2, &ppvArgs[0]);
-
+	pneuroGlobal = NeurospacesNewFromCmdLine(3, &ppvArgs[0]);
+	printf("Print the empty, just created, neurospaces container\n");
+	 //QueryMachineHandle(pneuroGlobal,"quit");
+	 QueryMachineHandle(pneuroGlobal,"export no ndf STDOUT /**");
 	if (!pneuroGlobal)
 	{
 	    fprintf(stderr, "Error initializing neurospaces model container\n");

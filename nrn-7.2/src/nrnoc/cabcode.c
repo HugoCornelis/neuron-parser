@@ -18,12 +18,15 @@
 //- #include "/usr/local/include/ns-sli/nsintegrator.h"
 //- include didn't work, so we directrly define the variables we need
 
+
 //- these comments are copied from the ns-sli and should be moved to a model-container commodity API.
 #define SETPARA_HERE 6
 #define SETPARA_NUM 3
 #define SETPARA_FIELD 5
 #define SETPARA_GENESIS2 2
 
+//- include the file to the global pneuroGlobal variable
+#include "../oc/hoc.h"
 
 char *getRootedPathname(char *pc);
 struct PidinStack *getRootedContext(char *pc);
@@ -418,7 +421,13 @@ static Section* new_section(ob, sym, i)
 
 	PidinStackFree(ppistParent);
 	printf("++++++++++++++++++++++++++\n");
-	QueryMachineHandle(pneuroGlobal, "export no ndf STDOUT /**");
+	if(!pneuroGlobal)
+		printf("in if(!pneuroGlobal");
+	else
+	{
+		printf("Not in if(!pneuroGlobal\n");
+		QueryMachineHandle(pneuroGlobal, "export no ndf STDOUT /** ");
+	}
 	printf("++++++++++++++++++++++++++\n");
 
 
