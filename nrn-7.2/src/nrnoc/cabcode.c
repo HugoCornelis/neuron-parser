@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <nrnpython_config.h>
+#include <string.h>
 #include "section.h"
 #include "membfunc.h"
 #include "parse.h"
@@ -315,7 +316,6 @@ static Section* new_section(ob, sym, i)
 	Symbol* sym;
 	int i;
 {
-	printf("NP:new_section(ob,sym(%s),i(%d))\n",sym->name,i);
 	Section* sec;
 	Prop* prop;
 	static Symbol* nseg;
@@ -338,13 +338,9 @@ static Section* new_section(ob, sym, i)
 	prop->dparam[PROP_PY_INDEX]._pvoid = (void*)0;
 #endif
 	nrn_pushsec(sec);
-        printf("NP:---------Create section %s \n",secname(sec));
 	//NP:  Default section parameters
 	//NP:  nseg=1  L=100um  Ra=35.4 ohm.cm diam=500um  cm=1us/cm^2 where u=μ
 	//NP:  units from-> http://www.neuron.yale.edu/neuron/static/docs/units/unitchart.html
-	d = (double)DEF_nseg;
-	cable_prop_assign(nseg, &d, 0);
-	tree_changed = 1;
 	/*printf("new_section %s\n", secname(sec));*/
 	
 	//- create a segment in the neurospaces model-container
@@ -418,21 +414,68 @@ static Section* new_section(ob, sym, i)
 	//- deallocate context that references the parent
 
 	//- note: this does not deallocate the parent symbol
-
 	PidinStackFree(ppistParent);
-	printf("++++++++++++++++++++++++++\n");
-	if(!pneuroGlobal)
-		printf("in if(!pneuroGlobal");
-	else
+	
+
+	/////////////////////////////////////////////////
+	//- add the default variables to the section
+
+	//NP:  Default section parameters
+	//NP:  nseg=1  L=100um  Ra=35.4 ohm.cm diam=500um  cm=1us/cm^2 where u=μ
+	//NP:  units from-> http://www.neuron.yale.edu/neuron/static/docs/units/unitchart.html
+	
+	// secname(): a pathname of a section, for instance 'soma'
+	// sym->name:
+	//     Neuron	Neurospaces
+	//
+	//     L	LENGTH
+	//     nseg	ignore for now
+	//     Ra	RA
+	//     cm	CM
+	//     diam	DIA
+	//     		RM
+	// *pd: a valid float value
+	
+	//- Add the default papameters
+
+	char context[50];
+	strcpy(context,"/cell/");
+	strcat(context,secname(sec));
+	struct PidinStack *ppistSource = getRootedContext(context);
+
+	if (ppistSource == NULL)
 	{
-		printf("Not in if(!pneuroGlobal\n");
-		QueryMachineHandle(pneuroGlobal, "export no ndf STDOUT /** ");
+	    fprintf(stderr, "Out of memory error when construction %s\n", secname(sec));
+
+	    // return -1;
 	}
-	printf("++++++++++++++++++++++++++\n");
+	struct symtab_BioComponent *phsle = PidinStackLookupTopSymbol( ppistSource );
+	
+	struct symtab_Parameters *ppar = ParameterNewFromNumber("LENGTH", 100*pow(10,-6));
+	BioComponentChangeParameter(phsle, ppar);
+
+	struct symtab_Parameters *ppar1 = ParameterNewFromNumber("RA", 35.4*pow(10,-2));
+	BioComponentChangeParameter(phsle, ppar1);
+
+	struct symtab_Parameters *ppar2 = ParameterNewFromNumber("DIA", 500*pow(10,-6));
+	BioComponentChangeParameter(phsle, ppar2);
+	
+	struct symtab_Parameters *ppar3 = ParameterNewFromNumber("CM", 1*pow(10,-2));
+	BioComponentChangeParameter(phsle, ppar3);
+	
+	PidinStackFree(ppistSource);
+	
+	char arg[]="export no ndf STDOUT /**";
+	QueryMachineHandle(pneuroGlobal,&arg);
 
 
 
 	printf("NP:new_section(ob,sym,i) end\n");
+	
+	
+	d = (double)DEF_nseg;
+	cable_prop_assign(nseg, &d, 0);
+	tree_changed = 1;
 	return sec;
 }
 	
@@ -816,6 +859,7 @@ static connectsec_impl(parent, sec) Section* parent, *sec;
 	tree_changed = 1;
 	diam_changed = 1;
 	printf("NP:----------Connect  (parent(%s), at(%f))\n",secname(parent),d2);
+        printf("NP:---------Create section %s \n",secname(sec));
 	printf("NP:   -------with child(%s) at(%f)\n",secname(sec),d1);
 
 	// \todo: check d1 and d2 whether they have acceptable values (0 and 1)
@@ -1254,6 +1298,61 @@ nrn_rangeconst(sec, s, pd, op)
 			}
 			*dpr = *pd;
 			printf("NP:change1 section %s variable %s to %f\n",secname(sec),s->name,*dpr);
+
+
+			// secname(): a pathname of a section, for instance 'soma'
+			// sym->name:
+			//     Neuron	Neurospaces
+			//
+			//     L	LENGTH
+			//     nseg	ignore for now
+			//     R	a	RA
+			//     cm	CM
+			//     diam	DIA
+			//     		RM
+			// *pd: a valid float value
+			
+			//struct PidinStack *ppistSource = getRootedContext(secname(sec));
+			char context[50];
+			strcpy(context,"/cell/");
+			strcat(context,secname(sec));
+			struct PidinStack *ppistSource = getRootedContext(context);
+
+			if (ppistSource == NULL)
+			{
+			    fprintf(stderr, "Out of memory error when construction %s\n", secname(sec));
+
+			    // return -1;
+			}
+
+			//- get a reference to the parent element
+
+			struct symtab_HSolveListElement *phsleSource = PidinStackLookupTopSymbol(ppistSource);
+
+			if (strcmp(s->name, "cm") == 0)
+			{
+			    double cm=*dpr*pow(10,-2);
+			    printf("Neuron-parser:changing %s CM to %f\n",context,cm);
+			    struct symtab_Parameters *ppar = ParameterNewFromNumber("CM",cm);	
+	
+			    struct symtab_BioComponent *phsle = PidinStackLookupTopSymbol( ppistSource );
+
+			    BioComponentChangeParameter(phsle, ppar);
+			}
+			else if (strcmp(s->name, "diam") == 0)
+			{
+			    double diam=*dpr*pow(10,-6);
+			    printf("Neuron-parser:changing %s DIA to %f\n",context,diam);
+			    struct symtab_Parameters *ppar = ParameterNewFromNumber("DIA", diam);
+	
+			    struct symtab_BioComponent *phsle = PidinStackLookupTopSymbol( ppistSource );
+
+			    BioComponentChangeParameter(phsle, ppar);
+			}
+	
+			//- Free pidinstack
+			PidinStackFree(ppistSource);
+
 		}
 		if (s->u.rng.type == MORPHOLOGY) {
 			sec->recalc_area_ = 1;
@@ -1856,7 +1955,11 @@ cable_prop_assign(sym, pd, op)
 	//     		RM
 	// *pd: a valid float value
 	
-	struct PidinStack *ppistSource = getRootedContext(secname(sec));
+	//struct PidinStack *ppistSource = getRootedContext(secname(sec));
+	char context[50];
+	strcpy(context,"/cell/");
+	strcat(context,secname(sec));
+	struct PidinStack *ppistSource = getRootedContext(context);
 
 	if (ppistSource == NULL)
 	{
@@ -1869,15 +1972,29 @@ cable_prop_assign(sym, pd, op)
 
 	struct symtab_HSolveListElement *phsleSource = PidinStackLookupTopSymbol(ppistSource);
 
-
 	if (strcmp(sym->name, "L") == 0)
-	{
-	    struct symtab_Parameters *ppar = ParameterNewFromNumber("LENGTH", *pd);
+	{	
+	    double l=*pd*pow(10,-6);
+	    printf("Neuron-parser:changing %s L to %f(SI)\n",context,l);
+	    struct symtab_Parameters *ppar = ParameterNewFromNumber("LENGTH",l);
 	
 	    struct symtab_BioComponent *phsle = PidinStackLookupTopSymbol( ppistSource );
 
 	    BioComponentChangeParameter(phsle, ppar);
 	}
+	else if (strcmp(sym->name, "Ra") == 0 )
+	{
+	    double ra=*pd*pow(10,-2);
+	    printf("Neuron-parser:changing %s Ra to %f(SI)\n",context,ra);
+	    struct symtab_Parameters *ppar = ParameterNewFromNumber("RA", ra);
+	
+	    struct symtab_BioComponent *phsle = PidinStackLookupTopSymbol( ppistSource );
+
+	    BioComponentChangeParameter(phsle, ppar);
+	}
+	
+	//- Free momery
+	PidinStackFree(ppistSource);
 
 	switch(sym->u.rng.type) {
 	

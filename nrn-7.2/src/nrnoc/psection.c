@@ -4,6 +4,7 @@
 #include "section.h"
 #include "parse.h"
 #include "membfunc.h"
+#include <string.h>
 
 //- Include the file that holds extern pneuroGlobal
 #include "../oc/hoc.h"
@@ -15,10 +16,15 @@ psection()
 {
 	Section *sec;
 	Prop *p, *p1;
-	printf("NP:--------- We should also print from g3\n");
-	//QueryMachineHandle(pneuroGlobal, "export no ndf STDOUT /**");
-	QueryMachineHandle(pneuroGlobal, "");
 	sec = chk_access();
+
+	char arg[50];
+	strcpy(arg,"/export ndf STDOUT /cell/");
+	strcat(arg,secname(sec));
+	strcat(arg,"/**");
+	printf("NP:passing \"%s\"\n",arg);
+	QueryMachineHandle(pneuroGlobal,&arg);
+	//QueryMachineHandle(pneuroGlobal, "export no ndf STDOUT /**");
 	p = sec->prop;
 	Printf("%s {", secname(sec));
 	Printf(" nseg=%d  L=%g  Ra=%g", sec->nnode - 1, section_length(sec),
