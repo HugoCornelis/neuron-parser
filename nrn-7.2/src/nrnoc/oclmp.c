@@ -171,7 +171,7 @@ static void nrn_alloc(_prop)
  _mechtype = nrn_get_mechtype(_mechanism[1]);
   hoc_register_dparam_size(_mechtype, 2);
  	hoc_register_var(hoc_scdoub, hoc_vdoub, hoc_intfunc);
- 	ivoc_help("help ?1 OClamp /home/db/neurospaces_project/neuron-parser/source/snapshots/0/nrn-7.2/src/nrnoc/./oclmp.mod\n");
+ 	ivoc_help("help ?1 OClamp /home/hugo/neurospaces_project/neuron-parser/source/snapshots/0/nrn-7.2/src/nrnoc/./oclmp.mod\n");
  hoc_register_limits(_mechtype, _hoc_parm_limits);
  hoc_register_units(_mechtype, _hoc_parm_units);
  }

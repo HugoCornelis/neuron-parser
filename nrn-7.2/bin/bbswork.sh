@@ -1,9 +1,9 @@
 #!/bin/sh
 
 prefix=/usr/local
-exec_prefix=/usr/local/x86_64
+exec_prefix=/usr/local/i686
 NRNBIN=${exec_prefix}/bin
-ARCH=x86_64
+ARCH=i686
 NEURONHOME=/usr/local/share/nrn
 
 cd $1

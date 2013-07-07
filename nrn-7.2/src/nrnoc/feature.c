@@ -99,7 +99,7 @@ static void nrn_alloc(_prop)
 	int _vectorized = 0;
   _initlists();
  	hoc_register_var(hoc_scdoub, hoc_vdoub, hoc_intfunc);
- 	ivoc_help("help ?1 feature /home/db/neurospaces_project/neuron-parser/source/snapshots/0/nrn-7.2/src/nrnoc/./feature.mod\n");
+ 	ivoc_help("help ?1 feature /home/hugo/neurospaces_project/neuron-parser/source/snapshots/0/nrn-7.2/src/nrnoc/./feature.mod\n");
  }
 static int _reset;
 static char *modelname = "";
